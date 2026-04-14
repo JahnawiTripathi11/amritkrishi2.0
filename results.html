@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Recommendations - AmritKrishi</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="min-h-screen relative overflow-hidden">
+        <!-- Background -->
+        <div class="background-image">
+            <div class="overlay"></div>
+        </div>
+
+        <!-- Navigation Header -->
+        <nav class="nav-container">
+            <div class="nav-left">
+                <a href="index.html" class="logo-link">
+                    <span class="logo-text" data-i18n="navTitle">AmritKrishi</span>
+                </a>
+                <div class="nav-links">
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="features.html" class="nav-link">Features</a>
+                </div>
+            </div>
+            <div class="nav-right">
+                <div class="language-select-container">
+                    <select id="languageSelect" class="language-select">
+                        <option value="en">English</option>
+                        <option value="hi">हिंदी</option>
+                        <option value="pa">ਪੰਜਾਬੀ</option>
+                        <option value="or">ଓଡ଼ିଆ</option>
+                    </select>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Results Content -->
+        <div class="results-main-content">
+            <div class="results-container">
+                <!-- Progress Indicator -->
+                <div class="progress-indicator">
+                    <div class="progress-step">
+                        <div class="step-number">1</div>
+                        <span class="step-text" data-i18n="stepLocation">Location</span>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-number">2</div>
+                        <span class="step-text" data-i18n="stepAnalysis">Analysis</span>
+                    </div>
+                    <div class="progress-step active">
+                        <div class="step-number">3</div>
+                        <span class="step-text" data-i18n="stepResults">Results</span>
+                    </div>
+                </div>
+
+                <!-- Farmer Welcome -->
+                <div class="farmer-welcome" id="farmerWelcome">
+                    <h2>Hello, <span id="welcomeName">Farmer</span>! 👋</h2>
+                    <p>Here are your personalized crop recommendations for <span id="locationName">your location</span></p>
+                </div>
+
+                <!-- Location Summary -->
+                <div class="location-summary-card">
+                    <div class="summary-header">
+                        <h3>📍 Location Analysis</h3>
+                        <div class="location-badge" id="locationType">Agricultural Zone</div>
+                    </div>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <div class="summary-label">Coordinates</div>
+                            <div class="summary-value" id="summaryCoords">--</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Soil Type</div>
+                            <div class="summary-value" id="summarySoil">Analyzing...</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Climate Zone</div>
+                            <div class="summary-value" id="summaryClimate">Analyzing...</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Rainfall</div>
+                            <div class="summary-value" id="summaryRainfall">-- mm/year</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Recommendations -->
+                <div class="recommendations-section">
+                    <h2>🌾 Top Crop Recommendations</h2>
+                    <p class="section-subtitle">Based on soil analysis, climate data, and regional suitability</p>
+                    
+                    <div class="recommendations-grid" id="recommendationsGrid">
+                        <!-- Recommendations will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Detailed Analysis -->
+                <div class="analysis-section">
+                    <h2>📊 Detailed Analysis</h2>
+                    
+                    <div class="analysis-tabs">
+                        <button class="analysis-tab active" data-tab="soil">Soil Analysis</button>
+                        <button class="analysis-tab" data-tab="climate">Climate Data</button>
+                        <button class="analysis-tab" data-tab="seasonal">Seasonal Calendar</button>
+                    </div>
+                    
+                    <div class="analysis-content">
+                        <!-- Soil Analysis Tab -->
+                        <div class="tab-content active" id="soilTab">
+                            <div class="soil-metrics">
+                                <div class="metric-card">
+                                    <div class="metric-label">Soil pH</div>
+                                    <div class="metric-value" id="soilPH">--</div>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill" id="phBar" style="width: 0%"></div>
+                                    </div>
+                                    <div class="metric-status" id="phStatus">Analyzing...</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-label">Organic Carbon</div>
+                                    <div class="metric-value" id="soilOrganic">--%</div>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill" id="organicBar" style="width: 0%"></div>
+                                    </div>
+                                    <div class="metric-status" id="organicStatus">Analyzing...</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-label">Nitrogen Level</div>
+                                    <div class="metric-value" id="soilNitrogen">-- kg/ha</div>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill" id="nitrogenBar" style="width: 0%"></div>
+                                    </div>
+                                    <div class="metric-status" id="nitrogenStatus">Analyzing...</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Climate Data Tab -->
+                        <div class="tab-content" id="climateTab">
+                            <div class="climate-metrics">
+                                <div class="climate-card">
+                                    <div class="climate-icon">🌡️</div>
+                                    <div class="climate-data">
+                                        <div class="climate-label">Average Temperature</div>
+                                        <div class="climate-value" id="avgTemp">--°C</div>
+                                    </div>
+                                </div>
+                                <div class="climate-card">
+                                    <div class="climate-icon">💧</div>
+                                    <div class="climate-data">
+                                        <div class="climate-label">Annual Rainfall</div>
+                                        <div class="climate-value" id="annualRainfall">-- mm</div>
+                                    </div>
+                                </div>
+                                <div class="climate-card">
+                                    <div class="climate-icon">☀️</div>
+                                    <div class="climate-data">
+                                        <div class="climate-label">Sunshine Hours</div>
+                                        <div class="climate-value" id="sunshineHours">-- hrs/day</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="climate-chart">
+                                <canvas id="climateChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- Seasonal Calendar Tab -->
+                        <div class="tab-content" id="seasonalTab">
+                            <div class="calendar-container">
+                                <div class="season-card">
+                                    <h4>🌱 Kharif Season (Jun - Oct)</h4>
+                                    <div class="season-crops" id="kharifCrops">
+                                        <div class="loading-text">Loading recommendations...</div>
+                                    </div>
+                                </div>
+                                <div class="season-card">
+                                    <h4>🌾 Rabi Season (Nov - Mar)</h4>
+                                    <div class="season-crops" id="rabiCrops">
+                                        <div class="loading-text">Loading recommendations...</div>
+                                    </div>
+                                </div>
+                                <div class="season-card">
+                                    <h4>☀️ Zaid Season (Mar - Jun)</h4>
+                                    <div class="season-crops" id="zaidCrops">
+                                        <div class="loading-text">Loading recommendations...</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="action-btn secondary" onclick="window.location.href='location.html'">
+                        ← Analyze Another Location
+                    </button>
+                    <button class="action-btn primary" onclick="saveRecommendations()">
+                        💾 Save Recommendations
+                    </button>
+                    <button class="action-btn primary" onclick="shareResults()">
+                        📤 Share Results
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INCLUDE SHARED LANGUAGE SYSTEM -->
+    <script src="js/shared-language.js"></script>
+    
+    <script>
+        let farmData = null;
+        let analysisResults = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("🌾 RESULTS PAGE LOADED");
+            
+            // Load saved farm data
+            loadFarmData();
+            
+            // Setup tab switching
+            setupAnalysisTabs();
+        });
+
+        function loadFarmData() {
+            console.log("🔍 Loading farm data from storage...");
+            
+            const analysisResultsData = localStorage.getItem('analysisResults');
+            const farmDataStorage = localStorage.getItem('farmData');
+            const locationData = localStorage.getItem('locationData');
+            
+            console.log("📦 Available data:", {
+                analysisResults: !!analysisResultsData,
+                farmData: !!farmDataStorage, 
+                locationData: !!locationData
+            });
+            
+            let coordinates = null;
+            let farmerName = "Farmer";
+            
+            // Priority 1: Use direct location data
+            if (locationData) {
+                console.log("✅ Using direct location data");
+                const locData = JSON.parse(locationData);
+                coordinates = {
+                    latitude: locData.latitude,
+                    longitude: locData.longitude
+                };
+                farmerName = locData.farmerName || "Farmer";
+            }
+            // Priority 2: Use backend analysis results
+            else if (analysisResultsData) {
+                console.log("✅ Using backend analysis results");
+                const results = JSON.parse(analysisResultsData);
+                
+                if (results.latitude && results.longitude) {
+                    coordinates = {
+                        latitude: results.latitude,
+                        longitude: results.longitude
+                    };
+                } else if (results.soilAnalysis && results.soilAnalysis.latitude) {
+                    coordinates = {
+                        latitude: results.soilAnalysis.latitude,
+                        longitude: results.soilAnalysis.longitude
+                    };
+                }
+                
+                farmerName = results.farmerName || "Farmer";
+                analysisResults = results;
+                
+                // Display backend results
+                displayBackendResults(results);
+                return;
+            }
+            // Priority 3: Use old farm data
+            else if (farmDataStorage) {
+                console.log("⚠️ Using old farm data");
+                const farmDataObj = JSON.parse(farmDataStorage);
+                farmData = farmDataObj;
+                
+                if (farmDataObj.location) {
+                    coordinates = {
+                        latitude: farmDataObj.location.latitude,
+                        longitude: farmDataObj.location.longitude
+                    };
+                }
+                farmerName = farmDataObj.farmerName || "Farmer";
+            }
+            // No data found
+            else {
+                alert('No farm data found. Please go back and enter your location.');
+                window.location.href = 'location.html';
+                return;
+            }
+            
+            // If no coordinates found, use defaults
+            if (!coordinates) {
+                console.warn("❌ No coordinates found, using defaults");
+                coordinates = {
+                    latitude: 28.6139, // Delhi
+                    longitude: 77.2090
+                };
+            }
+            
+            console.log("🎯 Final coordinates:", coordinates);
+            console.log("👨‍🌾 Farmer name:", farmerName);
+            
+            // Update UI
+            document.getElementById('welcomeName').textContent = farmerName;
+            document.getElementById('summaryCoords').textContent = 
+                `${coordinates.latitude.toFixed(4)}°, ${coordinates.longitude.toFixed(4)}°`;
+            
+            // Store coordinates for analysis
+            farmData = {
+                farmerName: farmerName,
+                location: coordinates
+            };
+
+            // Send to backend for analysis
+            sendToBackendForAnalysis(farmerName, coordinates.latitude, coordinates.longitude);
+        }
+
+        async function sendToBackendForAnalysis(farmerName, latitude, longitude) {
+            console.log("🚀 Sending data to backend for analysis...");
+            
+            try {
+                const response = await fetch('http://localhost:8080/api/analysis/recommend', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        farmerName: farmerName,
+                        latitude: latitude,
+                        longitude: longitude,
+                        locationMethod: 'manual'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const backendResults = await response.json();
+                console.log("✅ Backend analysis complete:", backendResults);
+                
+                // Store results for later use
+                localStorage.setItem('analysisResults', JSON.stringify(backendResults));
+                analysisResults = backendResults;
+                
+                // Display the results
+                displayBackendResults(backendResults);
+                
+            } catch (error) {
+                console.error('❌ Backend analysis failed:', error);
+                alert('Backend analysis failed. Using frontend fallback.');
+                useFrontendFallback();
+            }
+        }
+
+        function displayBackendResults(backendData) {
+            console.log("📊 Displaying backend results:", backendData);
+            
+            // Update basic info
+            document.getElementById('welcomeName').textContent = backendData.farmerName || "Farmer";
+            document.getElementById('locationName').textContent = backendData.region || "your location";
+            document.getElementById('locationType').textContent = backendData.region || "Agricultural Zone";
+            
+            if (backendData.soilAnalysis) {
+                const soil = backendData.soilAnalysis;
+                document.getElementById('soilPH').textContent = soil.soilPh ? soil.soilPh.toFixed(1) : '6.5';
+                document.getElementById('soilOrganic').textContent = soil.organicCarbon ? soil.organicCarbon.toFixed(1) + '%' : '1.5%';
+                document.getElementById('soilNitrogen').textContent = soil.nitrogenLevel ? soil.nitrogenLevel + ' kg/ha' : '1200 kg/ha';
+                document.getElementById('summarySoil').textContent = soil.soilType || 'Loam Soil';
+                
+                updateProgressBars(soil);
+            }
+            
+            if (backendData.climateData) {
+                const climate = backendData.climateData;
+                document.getElementById('avgTemp').textContent = climate.avgTemperature ? climate.avgTemperature.toFixed(1) + '°C' : '25.0°C';
+                document.getElementById('annualRainfall').textContent = climate.annualRainfall ? climate.annualRainfall + ' mm' : '1000 mm';
+                document.getElementById('sunshineHours').textContent = climate.sunshineHours ? climate.sunshineHours.toFixed(1) + ' hrs/day' : '6.0 hrs/day';
+                document.getElementById('summaryRainfall').textContent = climate.annualRainfall ? climate.annualRainfall + ' mm/year' : '1000 mm/year';
+                document.getElementById('summaryClimate').textContent = climate.climateZone || 'Tropical';
+                
+                createClimateChart(climate);
+            }
+            
+            if (backendData.recommendations) {
+                displayRecommendations(backendData.recommendations);
+                updateSeasonalRecommendations(backendData.recommendations);
+            }
+            
+            // Update coordinates
+            if (backendData.soilAnalysis && backendData.soilAnalysis.latitude) {
+                document.getElementById('summaryCoords').textContent = 
+                    `${backendData.soilAnalysis.latitude.toFixed(4)}°, ${backendData.soilAnalysis.longitude.toFixed(4)}°`;
+            }
+            
+            hideLoadingState();
+        }
+
+        function useFrontendFallback() {
+            console.log("🔄 Using frontend fallback analysis");
+            // This will be handled by the backend now
+            alert("Please ensure the backend server is running on localhost:8080");
+        }
+
+        function displayRecommendations(recommendations) {
+            const grid = document.getElementById('recommendationsGrid');
+            grid.innerHTML = '';
+            
+            console.log("🔄 Displaying recommendations:", recommendations);
+            
+            if (!recommendations || recommendations.length === 0) {
+                grid.innerHTML = '<div class="no-recommendations">No crop recommendations available for this location.</div>';
+                return;
+            }
+            
+            recommendations.forEach((rec, index) => {
+                const cropElement = document.createElement('div');
+                cropElement.className = 'crop-card';
+                cropElement.innerHTML = `
+                    <div class="crop-header">
+                        <h3>${rec.cropName || rec.name || 'Crop'}</h3>
+                        <div class="score-badge" style="background: ${getSuitabilityColor(rec.score)}">
+                            ${rec.score}%
+                        </div>
+                    </div>
+                    <div class="crop-details">
+                        <div class="crop-metric">
+                            <span>🌱 Season:</span>
+                            <span>${rec.season || 'Kharif'}</span>
+                        </div>
+                        <div class="crop-metric">
+                            <span>⏱️ Duration:</span>
+                            <span>${rec.duration || rec.durationDays || 90} days</span>
+                        </div>
+                        <div class="crop-metric">
+                            <span>📈 Yield:</span>
+                            <span>${rec.yield || rec.expectedYield || '3-5 tons/ha'}</span>
+                        </div>
+                        <div class="crop-metric">
+                            <span>💧 Water:</span>
+                            <span>${rec.water || rec.waterRequirement || 'Medium'}</span>
+                        </div>
+                    </div>
+                    <div class="suitability-info">
+                        <strong>Suitability: ${getSuitabilityLevel(rec.score)}</strong>
+                    </div>
+                `;
+                grid.appendChild(cropElement);
+            });
+        }
+
+        function getSuitabilityColor(score) {
+            if (score >= 80) return "#10b981";
+            if (score >= 60) return "#3b82f6";
+            if (score >= 40) return "#f59e0b";
+            return "#ef4444";
+        }
+
+        function getSuitabilityLevel(score) {
+            if (score >= 80) return "Excellent";
+            if (score >= 60) return "Good";
+            if (score >= 40) return "Moderate";
+            return "Poor";
+        }
+
+        function setupAnalysisTabs() {
+            document.querySelectorAll('.analysis-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    
+                    document.querySelectorAll('.analysis-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(tabName + 'Tab').classList.add('active');
+                });
+            });
+        }
+
+        function updateProgressBars(soilData) {
+            const phPercent = ((soilData.soilPh - 4) / 4) * 100;
+            document.getElementById('phBar').style.width = Math.min(100, Math.max(0, phPercent)) + '%';
+            document.getElementById('phStatus').textContent = getPHStatus(soilData.soilPh);
+            
+            const organicPercent = (soilData.organicCarbon / 3) * 100;
+            document.getElementById('organicBar').style.width = Math.min(100, organicPercent) + '%';
+            document.getElementById('organicStatus').textContent = getOrganicStatus(soilData.organicCarbon);
+            
+            const nitrogenPercent = (soilData.nitrogenLevel / 2000) * 100;
+            document.getElementById('nitrogenBar').style.width = Math.min(100, nitrogenPercent) + '%';
+            document.getElementById('nitrogenStatus').textContent = getNitrogenStatus(soilData.nitrogenLevel);
+        }
+
+        function getPHStatus(ph) {
+            if (ph >= 6.0 && ph <= 7.0) return 'Ideal for most crops';
+            if (ph >= 5.5 && ph <= 7.5) return 'Moderate';
+            return 'Needs soil amendment';
+        }
+
+        function getOrganicStatus(organic) {
+            if (organic > 1.5) return 'Excellent';
+            if (organic > 1.0) return 'Good';
+            return 'Needs organic matter';
+        }
+
+        function getNitrogenStatus(nitrogen) {
+            if (nitrogen > 1500) return 'High';
+            if (nitrogen > 1000) return 'Adequate';
+            return 'Low - consider fertilization';
+        }
+
+        function createClimateChart(climateData) {
+            const ctx = document.getElementById('climateChart').getContext('2d');
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            
+            // Use backend data or create sample data
+            const monthlyTemp = climateData.monthlyTemp || Array.from({length: 12}, (_, i) => {
+                const baseTemp = climateData.avgTemperature || 25;
+                const variation = Math.sin(i * 0.5) * 8;
+                return baseTemp + variation;
+            });
+            
+            const monthlyRain = climateData.monthlyRain || Array.from({length: 12}, (_, i) => {
+                const baseRain = (climateData.annualRainfall || 1000) / 12;
+                if (i >= 5 && i <= 9) return baseRain * 2.5;
+                return baseRain * 0.3;
+            });
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [
+                        {
+                            label: 'Temperature (°C)',
+                            data: monthlyTemp,
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            yAxisID: 'y',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Rainfall (mm)',
+                            data: monthlyRain,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            yAxisID: 'y1',
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    interaction: { mode: 'index', intersect: false },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: { display: true, text: 'Temperature (°C)' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: { display: true, text: 'Rainfall (mm)' },
+                            grid: { drawOnChartArea: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateSeasonalRecommendations(recommendations) {
+            const kharifCrops = recommendations.filter(r => 
+                r.season && r.season.toLowerCase().includes('kharif'));
+            const rabiCrops = recommendations.filter(r => 
+                r.season && r.season.toLowerCase().includes('rabi'));
+            const zaidCrops = recommendations.filter(r => 
+                r.season && (r.season.toLowerCase().includes('zaid') || 
+                            r.season.toLowerCase().includes('year-round') ||
+                            r.season.toLowerCase().includes('annual')));
+            
+            displaySeasonalCrops('kharifCrops', kharifCrops);
+            displaySeasonalCrops('rabiCrops', rabiCrops);
+            displaySeasonalCrops('zaidCrops', zaidCrops);
+        }
+
+        function displaySeasonalCrops(containerId, crops) {
+            const container = document.getElementById(containerId);
+            
+            if (!crops || crops.length === 0) {
+                container.innerHTML = '<div class="no-crops">No specific recommendations for this season</div>';
+                return;
+            }
+            
+            container.innerHTML = crops.map(crop => `
+                <div class="season-crop">
+                    <strong>${crop.cropName || crop.name}</strong>
+                    <span class="crop-score" style="color: ${getSuitabilityColor(crop.score)}">
+                        ${crop.score}%
+                    </span>
+                    <div class="crop-duration">${crop.duration || crop.durationDays || 90} days</div>
+                </div>
+            `).join('');
+        }
+
+        async function saveRecommendations() {
+            console.log("💾 Save Recommendations button clicked");
+            
+            try {
+                const savedData = localStorage.getItem('analysisResults');
+                
+                if (!savedData) {
+                    alert('No analysis data found. Please analyze a farm first.');
+                    return;
+                }
+                
+                const analysisResults = JSON.parse(savedData);
+                const farmerId = analysisResults.farmerId;
+                const farmerName = document.getElementById('welcomeName').textContent;
+                
+                const saveData = {
+                    farmerId: farmerId,
+                    farmerName: farmerName,
+                    recommendations: analysisResults.recommendations || [],
+                    savedAt: new Date().toISOString()
+                };
+                
+                console.log('Saving recommendations:', saveData);
+                
+                const saveBtn = document.querySelector('.action-btn.primary');
+                const originalText = saveBtn.textContent;
+                saveBtn.innerHTML = '💾 Saving...';
+                saveBtn.disabled = true;
+                
+                const response = await fetch('http://localhost:8080/api/analysis/save-recommendations', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(saveData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                console.log('✅ Save response:', result);
+                
+                alert(`✅ ${result.message}\nSaved ${result.savedCount} recommendations for ${farmerName}`);
+                
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+                
+            } catch (error) {
+                console.error('❌ Error saving recommendations:', error);
+                alert('❌ Failed to save recommendations: ' + error.message);
+                
+                const saveBtn = document.querySelector('.action-btn.primary');
+                saveBtn.innerHTML = '💾 Save Recommendations';
+                saveBtn.disabled = false;
+            }
+        }
+
+        function shareResults() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My Crop Recommendations - AmritKrishi',
+                    text: `Check out my personalized crop recommendations from AmritKrishi!`,
+                    url: window.location.href
+                });
+            } else {
+                alert('Share feature not supported in your browser. You can copy the URL manually.');
+            }
+        }
+
+        function hideLoadingState() {
+            document.querySelectorAll('.loading-text').forEach(el => {
+                el.style.display = 'none';
+            });
+        }
+    </script>
+
+    <style>
+        /* Results page specific styles */
+        .results-main-content {
+            position: relative;
+            z-index: 10;
+            padding: 2rem 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .results-container {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .farmer-welcome {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(47, 93, 51, 0.3), rgba(168, 182, 140, 0.2));
+            border-radius: 1rem;
+            border: 1px solid rgba(216, 180, 0, 0.2);
+        }
+
+        .farmer-welcome h2 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .farmer-welcome p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .location-summary-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .summary-header h3 {
+            color: white;
+            margin: 0;
+        }
+
+        .location-badge {
+            background: var(--accent);
+            color: black;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .summary-item {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0.5rem;
+        }
+
+        .summary-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-value {
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .recommendations-section {
+            margin-bottom: 2rem;
+        }
+
+        .recommendations-section h2 {
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1.5rem;
+        }
+
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .crop-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .crop-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .crop-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .crop-header h3 {
+            color: white;
+            margin: 0;
+        }
+
+        .score-badge {
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .crop-details {
+            margin-bottom: 1rem;
+        }
+
+        .crop-metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .crop-metric:last-child {
+            border-bottom: none;
+        }
+
+        .crop-metric span:first-child {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .crop-metric span:last-child {
+            color: white;
+            font-weight: 500;
+        }
+
+        .suitability-info {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+
+        .suitability-info strong {
+            color: white;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .factors {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .factor {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .analysis-section {
+            margin-bottom: 2rem;
+        }
+
+        .analysis-section h2 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .analysis-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.5rem;
+        }
+
+        .analysis-tab {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .analysis-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .analysis-tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .soil-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .metric-label {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .metric-value {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .metric-bar {
+            background: rgba(255, 255, 255, 0.1);
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+        }
+
+        .metric-fill {
+            background: var(--accent);
+            height: 100%;
+            transition: width 1s ease-in-out;
+        }
+
+        .metric-status {
+            color: var(--accent);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .climate-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .climate-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+
+        .climate-icon {
+            font-size: 2rem;
+        }
+
+        .climate-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .climate-value {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .climate-chart {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+
+        .calendar-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .season-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+
+        .season-card h4 {
+            color: white;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.5rem;
+        }
+
+        .season-crops {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .season-crop {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0.5rem;
+        }
+
+        .season-crop strong {
+            color: white;
+        }
+
+        .crop-score {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .no-crops {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            padding: 1rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .action-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, var(--primary), #3a7a40);
+            color: white;
+        }
+
+        .action-btn.primary:hover {
+            background: linear-gradient(135deg, #3a7a40, #4a9a50);
+            transform: translateY(-2px);
+        }
+
+        .action-btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .action-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .loading-text {
+            color: rgba(255, 255, 255, 0.5);
+            font-style: italic;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .results-container {
+                padding: 1rem;
+            }
+            
+            .recommendations-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .summary-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            /* Seasonal Calendar Styles */
+.calendar-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.season-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.season-card:hover {
+    border-color: #00ff88;
+    transform: translateY(-5px);
+}
+
+.season-card h4 {
+    color: white;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.season-crops {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.season-crop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.season-crop:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+}
+
+.season-crop strong {
+    color: white;
+    flex: 1;
+}
+
+.crop-score {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-right: 1rem;
+}
+
+.crop-duration {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.no-crops {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 1rem;
+    font-style: italic;
+}
+
+/* Seasonal specific colors */
+#kharifCrops .season-crop {
+    border-left: 3px solid #00ff88;
+}
+
+#rabiCrops .season-crop {
+    border-left: 3px solid #00d9ff;
+}
+
+#zaidCrops .season-crop {
+    border-left: 3px solid #ffd700;
+}
+        }
+
+        /* Language Dropdown Styles
+.language-dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+.language-dropdown-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.language-dropdown-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.current-language {
+    font-weight: 500;
+}
+
+.dropdown-arrow {
+    font-size: 0.7rem;
+    transition: transform 0.3s ease;
+}
+
+.language-dropdown-btn:hover .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.language-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #2d2d2d;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    min-width: 120px;
+    z-index: 1000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.language-option {
+    padding: 0.75rem 1rem;
+    color: white;
+    cursor: pointer;
+    border-radius: 0.25rem;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.language-option:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #00ff88;
+} */
+
+/* Ultra Premium Language Select */
+.language-select-container {
+    position: relative;
+    display: inline-block;
+}
+
+.language-select {
+    background: linear-gradient(135deg, 
+        rgba(40, 40, 40, 0.9) 0%, 
+        rgba(30, 30, 30, 0.9) 100%);
+    border: 1px solid;
+    border-image: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.2), 
+        rgba(255, 255, 255, 0.1)) 1;
+    color: white;
+    padding: 0.7rem 3rem 0.7rem 1.2rem;
+    border-radius: 1rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    min-width: 150px;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300ff88'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem top 50%;
+    background-size: 1rem;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    backdrop-filter: blur(20px);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.language-select::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(0, 255, 136, 0.1), 
+        transparent);
+    transition: left 0.6s ease;
+}
+
+.language-select:hover::before {
+    left: 100%;
+}
+
+.language-select:hover {
+    background: linear-gradient(135deg, 
+        rgba(50, 50, 50, 0.9) 0%, 
+        rgba(40, 40, 40, 0.9) 100%);
+    border-image: linear-gradient(135deg, 
+        rgba(0, 255, 136, 0.4), 
+        rgba(0, 217, 255, 0.4)) 1;
+    transform: translateY(-2px);
+    box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.language-select:focus {
+    outline: none;
+    border-image: linear-gradient(135deg, 
+        rgba(0, 255, 136, 0.6), 
+        rgba(0, 217, 255, 0.6)) 1;
+    box-shadow: 
+        0 0 0 3px rgba(0, 255, 136, 0.1),
+        0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.language-select option {
+    background: #2d2d2d;
+    color: white;
+    padding: 1rem;
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.language-select option:hover {
+    background: rgba(0, 255, 136, 0.2);
+}
+
+.language-select option:checked {
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.3), rgba(0, 217, 255, 0.3));
+    color: #00ff88;
+    font-weight: 600;
+}
+   
+   /* Custom Language Dropdown - No Rectangular Box */
+.custom-language-dropdown {
+    position: relative;
+    display: inline-block;
+    min-width: 140px;
+}
+
+.dropdown-selected {
+    background: linear-gradient(135deg, 
+        rgba(40, 40, 40, 0.9) 0%, 
+        rgba(30, 30, 30, 0.9) 100%);
+    border: 1px solid;
+    border-image: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.2), 
+        rgba(255, 255, 255, 0.1)) 1;
+    color: white;
+    padding: 0.7rem 1.2rem;
+    border-radius: 1rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    backdrop-filter: blur(20px);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    z-index: 1001;
+}
+
+.dropdown-selected::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(0, 255, 136, 0.1), 
+        transparent);
+    transition: left 0.6s ease;
+}
+
+.dropdown-selected:hover::before {
+    left: 100%;
+}
+
+.dropdown-selected:hover {
+    background: linear-gradient(135deg, 
+        rgba(50, 50, 50, 0.9) 0%, 
+        rgba(40, 40, 40, 0.9) 100%);
+    border-image: linear-gradient(135deg, 
+        rgba(0, 255, 136, 0.4), 
+        rgba(0, 217, 255, 0.4)) 1;
+    transform: translateY(-2px);
+    box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.dropdown-arrow {
+    transition: transform 0.3s ease;
+    color: #00ff88;
+}
+
+.dropdown-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, 
+        rgba(40, 40, 40, 0.95) 0%, 
+        rgba(30, 30, 30, 0.95) 100%);
+    border: 1px solid;
+    border-image: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.15), 
+        rgba(255, 255, 255, 0.1)) 1;
+    border-radius: 1rem;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    backdrop-filter: blur(20px);
+    box-shadow: 
+        0 15px 50px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    display: none;
+    z-index: 1002;
+    overflow: hidden;
+}
+
+.dropdown-option {
+    padding: 0.8rem 1rem;
+    color: white;
+    cursor: pointer;
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin: 0.1rem 0;
+}
+
+.dropdown-option:hover {
+    background: linear-gradient(135deg, 
+        rgba(0, 255, 136, 0.2) 0%, 
+        rgba(0, 217, 255, 0.2) 100%);
+    color: #00ff88;
+    transform: translateX(5px);
+}
+
+/* When dropdown is active */
+.custom-language-dropdown.active .dropdown-options {
+    display: block;
+    animation: dropdownFadeIn 0.3s ease;
+}
+
+.custom-language-dropdown.active .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Close dropdown when clicking outside */
+.dropdown-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: transparent;
+    z-index: 1000;
+    display: none;
+}
+
+.custom-language-dropdown.active ~ .dropdown-overlay {
+    display: block;
+}
+
+    </style>
+</body>
+</html>
